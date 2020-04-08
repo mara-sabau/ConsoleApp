@@ -2,39 +2,43 @@
 using System.Globalization;
 using System.Threading;
 
-public class Example
+public class DateAndTime
 {
     
     public static void Main()
     {
-        Example.PrintDate();      
+        PrintCurrentDate();      
     }
-    private static string PrintDate()
+    private static string PrintCurrentDate()
     {
-        int i = 1;
+        int id = 1;
+
+        TextInfo textInfo = new CultureInfo("ro-RO", false).TextInfo;
+
+        string formats = "F";
+
         while (true)
         {
-            string textToFormat = Example.GetDate();
+            DateTime dateToFormat = GetCurrentDate();
+            while (dateToFormat.Second % 10 == 0)
+            {
+                string[] dayOfWeek = dateToFormat.ToString(formats, CultureInfo.CreateSpecificCulture("ro-RO")).Split(",");
+                string[] currentDateSplit = dayOfWeek[1].Split(" ");
+                string date = currentDateSplit[1] + " " + textInfo.ToTitleCase(currentDateSplit[2]) + " " + currentDateSplit[3];
+                string hour = currentDateSplit[4];
 
-            string[] A =  textToFormat.Split(",");
-            string[] B = A[1].Split(" ");
-
-            Console.WriteLine(i + " - " + "Data: " + B[1] + " " + B[2] +" " + B[3] + " " + " Ora: " + B[4]);
-            Thread.Sleep(10000);
-            i++;
+                Console.WriteLine($"{id} - Data: {date} Ora: {hour}");
+                
+                Thread.Sleep(10000);
+                id++;
+                break;
+            }
+            
         }
-        return null;
-    }
-    private static string GetDate()
-    {
-       
-        string[] formats = { "F" };
-                                    
-        CultureInfo[] cultures = { CultureInfo.CreateSpecificCulture("ro-RO"), };
-       
-        DateTime now = DateTime.Now;
 
-        return now.ToString("F", CultureInfo.CreateSpecificCulture("ro-RO")).ToUpper();
-      
+    }
+    private static DateTime GetCurrentDate()
+    {    
+       return DateTime.Now;
     }
 }
